@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Seu copiloto nutricional inteligente para uma vida saudável." />
+  <meta name="theme-color" content="#2d7a5a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="RANUTRE" />
+  <link rel="apple-touch-icon" href="icon-512.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="icon-512.png" />
   <title>RANUTRE — Copiloto Nutricional</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3261,6 +3269,19 @@ function resetApp() {
   localStorage.clear();
   location.reload();
 }
+</script>
+
+<!-- Registro do Service Worker para PWA -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').then((registration) => {
+        console.log('Service Worker registrado com sucesso:', registration);
+      }).catch((error) => {
+        console.log('Erro ao registrar Service Worker:', error);
+      });
+    });
+  }
 </script>
 </body>
 </html>

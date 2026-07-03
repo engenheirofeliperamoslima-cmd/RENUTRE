@@ -3,10 +3,9 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-512.png'
+  './icon-512.png'
 ];
 
-// Instalação do Service Worker e cache de recursos
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -15,7 +14,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Ativação e limpeza de caches antigos
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -26,7 +24,6 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Estratégia de busca: Network first, falling back to cache
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request).catch(() => {
