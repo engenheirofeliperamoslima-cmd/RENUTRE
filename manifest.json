@@ -1,0 +1,18 @@
+{
+  "name": "RANUTRE — Copiloto Nutricional",
+  "short_name": "RANUTRE",
+  "description": "Seu copiloto nutricional inteligente para uma vida saudável.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a1410",
+  "theme_color": "#2d7a5a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
