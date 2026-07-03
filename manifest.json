@@ -1,0 +1,60 @@
+{
+  "name": "RANUTRE — Copiloto Nutricional",
+  "short_name": "RANUTRE",
+  "description": "Seu copiloto nutricional inteligente para uma vida saudável.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2d7a5a",
+  "background_color": "#0a1410",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "540x720",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Diário",
+      "short_name": "Diário",
+      "description": "Abrir o diário de alimentos",
+      "url": "./?view=diary",
+      "icons": [
+        {
+          "src": "icon-512.png",
+          "sizes": "512x512"
+        }
+      ]
+    },
+    {
+      "name": "Treino",
+      "short_name": "Treino",
+      "description": "Visualizar treino do dia",
+      "url": "./?view=workout",
+      "icons": [
+        {
+          "src": "icon-512.png",
+          "sizes": "512x512"
+        }
+      ]
+    }
+  ],
+  "categories": ["health", "fitness"],
+  "prefer_related_applications": false
+}
