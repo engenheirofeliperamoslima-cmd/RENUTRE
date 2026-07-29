@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASTEC Manuais — Documentação Técnica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root{
+    --black: #0a0a0c;
+    --black-2: #131417;
+    --panel: #17181c;
+    --panel-2: #1e2024;
+    --line: #2a2c31;
+    --line-soft: #212226;
+    --amber: #c3a15e;
+    --amber-bright: #e0c184;
+    --amber-deep: #6b592f;
+    --amber-dim: rgba(195,161,94,0.12);
+    --white: #f2efe8;
+    --muted: #9a9994;
+    --muted-2: #68675f;
+    --danger: #b6492f;
+    --radius: 10px;
+    --shadow: 0 24px 60px -24px rgba(0,0,0,0.75);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--black);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(201,154,46,0.06), transparent 40%),
+      radial-gradient(circle at 85% 100%, rgba(201,154,46,0.05), transparent 45%);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection{ background: var(--amber); color: #14140f; }
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-track{ background: var(--black-2); }
+  ::-webkit-scrollbar-thumb{ background: var(--line); border-radius:10px; }
+  ::-webkit-scrollbar-thumb:hover{ background: var(--amber-deep); }
+
+  a{ color:inherit; }
+  button{ font-family:inherit; cursor:pointer; }
+  :focus-visible{ outline: 2px solid var(--amber-bright); outline-offset: 2px; }
+
+  /* ---------- NAMEPLATE HEADER ---------- */
+  .nameplate{
+    position: sticky; top:0; z-index:40;
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.015) 0 2px, transparent 2px 6px),
+      linear-gradient(180deg, #121213, #0d0d0e);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 10px 30px -18px rgba(0,0,0,0.9);
+  }
+  .nameplate-inner{
+    max-width: 1280px; margin: 0 auto;
+    padding: 22px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap: 20px;
+    flex-wrap: wrap;
+  }
+  .brand{ display:flex; align-items:center; gap:18px; }
+  .brand-mark{
+    width:46px; height:46px; flex:none;
+    border: 1px solid var(--amber);
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    background: linear-gradient(160deg, var(--amber-dim), transparent 70%);
+  }
+  .brand-mark svg{ width:19px; height:19px; position:relative; z-index:2; color: var(--amber-bright); }
+  .brand-text .eyebrow{
+    font-family:'Fraunces', serif; font-style:italic; font-weight:500; font-size: 12.5px; letter-spacing:.02em;
+    color: var(--muted); margin-top:4px;
+  }
+  .brand-text h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size: 25px;
+    letter-spacing: .06em; margin:0; color: var(--white); text-transform: uppercase;
+  }
+  .header-right{ display:flex; align-items:center; gap:26px; flex-wrap:wrap; }
+  .header-stats{ display:flex; gap: 26px; font-family:'IBM Plex Mono', monospace; }
+  .header-stats .stat{ text-align:right; }
+  .header-stats .stat .n{ font-size: 20px; color: var(--amber-bright); font-weight:600; line-height:1; }
+  .header-stats .stat .l{ font-size: 10px; color: var(--muted-2); text-transform:uppercase; letter-spacing:.14em; margin-top:4px; }
+
+  .dev-toggle{
+    display:flex; align-items:center; gap:9px;
+    background: var(--black-2); border:1px solid var(--line); color: var(--muted);
+    padding: 9px 14px; border-radius: 2px; font-family:'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing:.08em; text-transform:uppercase; transition: all .15s ease;
+  }
+  .dev-toggle .dot{ width:7px; height:7px; border-radius:50%; background: var(--muted-2); transition: all .15s ease; }
+  .dev-toggle:hover{ border-color: var(--amber-deep); color: var(--muted); }
+  body.dev-mode .dev-toggle{ border-color: var(--amber); color: var(--amber-bright); background: var(--amber-dim); }
+  body.dev-mode .dev-toggle .dot{ background: var(--amber-bright); box-shadow: 0 0 8px var(--amber-bright); }
+
+  /* dev-mode ambient cue */
+  body.dev-mode .nameplate{ border-bottom-color: var(--amber-deep); }
+  body.dev-mode::before{
+    content:'MODO DESENVOLVEDOR'; position:fixed; top:0; left:0; right:0; z-index:50;
+    text-align:center; font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:.3em;
+    color:#17140b; background: var(--amber); padding: 3px 0;
+  }
+  body.dev-mode .nameplate{ margin-top: 18px; }
+
+  /* ---------- MAIN ---------- */
+  main{ max-width: 1280px; margin: 0 auto; padding: 40px 28px 90px; }
+
+  .intake{
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--amber-deep);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--panel), var(--black-2));
+    padding: 38px 34px;
+    margin-bottom: 50px;
+    transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    position: relative;
+  }
+  .intake.drag{
+    border-color: var(--amber-bright);
+    background: linear-gradient(180deg, var(--amber-dim), var(--black-2));
+    box-shadow: 0 0 60px -20px rgba(195,161,94,0.35);
+  }
+  .intake-top{ display:flex; align-items:flex-start; justify-content:space-between; gap: 30px; flex-wrap:wrap; }
+  .intake-label{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; }
+  .intake h2{ font-family:'Fraunces', serif; font-size: 27px; font-weight:500; margin: 0 0 10px; color:var(--white); }
+  .intake p{ color: var(--muted); font-size: 14px; max-width: 460px; line-height:1.6; margin:0; }
+  .drop-cta{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+  .btn{
+    font-family:'Inter', sans-serif; font-weight:600; font-size:13.5px;
+    padding: 12px 24px; border-radius: 30px; border: 1px solid var(--amber);
+    background: linear-gradient(180deg, var(--amber-bright), var(--amber)); color: #17140b; letter-spacing:.01em;
+    transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+    white-space: nowrap;
+  }
+  .btn:hover{ filter:brightness(1.06); box-shadow: 0 10px 26px -10px rgba(195,161,94,0.55); transform: translateY(-1px); }
+  .btn:active{ transform: translateY(0); }
+  .btn.ghost{ background: transparent; color: var(--amber-bright); border:1px solid var(--line); }
+  .btn.ghost:hover{ border-color: var(--amber); background: var(--amber-dim); box-shadow:none; }
+  .btn.small{ padding: 8px 14px; font-size:12px; }
+  .hint{ font-family:'IBM Plex Mono', monospace; font-size:11px; color: var(--muted-2); }
+
+  .dest-row{
+    margin-top: 20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  .dest-row label{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); }
+  select{
+    background: var(--black-2); border:1px solid var(--line); color: var(--white);
+    padding: 9px 12px; font-family:'IBM Plex Mono', monospace; font-size: 12.5px; border-radius:2px;
+  }
+  select:focus{ border-color: var(--amber); }
+
+  .link-row{
+    margin-top: 18px; padding-top: 20px; border-top: 1px solid var(--line-soft);
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  }
+  .link-row input[type="text"]{
+    flex:1; min-width: 240px;
+    background: var(--black-2); border: 1px solid var(--line);
+    color: var(--white); padding: 11px 14px; font-family:'IBM Plex Mono', monospace;
+    font-size: 13px; border-radius: 2px;
+  }
+  .link-row input[type="text"]:focus{ border-color: var(--amber); }
+  .link-row input[type="text"]::placeholder{ color: var(--muted-2); }
+  .link-status{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--muted); width:100%; min-height: 16px; }
+  .link-status.ok{ color: #8fae6b; }
+  .link-status.warn{ color: var(--amber-bright); }
+  .link-status.err{ color: var(--danger); }
+
+  /* ---------- TOOLBAR ---------- */
+  .toolbar{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    margin-bottom: 30px; flex-wrap:wrap;
+  }
+  .search{
+    background: var(--panel); border:1px solid var(--line); border-radius:20px;
+    padding: 9px 16px; font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--white);
+    width: 240px;
+  }
+  .search::placeholder{ color: var(--muted-2); }
+  .search:focus{ border-color: var(--amber); }
+
+  /* ---------- SECTIONS ---------- */
+  .section-block{ margin-bottom: 50px; }
+  .section-block.drop-target{ outline: 1.5px dashed var(--amber); outline-offset: 10px; border-radius: 4px; }
+  .section-header{ display:flex; align-items:center; justify-content:space-between; gap: 14px; margin-bottom: 18px; flex-wrap:wrap; }
+  .section-title-group{ display:flex; align-items:center; gap: 12px; }
+  .section-name{
+    font-family:'Fraunces', serif; text-transform:uppercase; letter-spacing:.04em;
+    font-size:17px; color:var(--white); display:flex; align-items:center; gap:10px;
+  }
+  .section-name::before{ content:''; width:18px; height:2px; background:var(--amber); display:inline-block; }
+  .section-count{ font-family:'IBM Plex Mono', monospace; font-size:11px; color: var(--muted-2); }
+  .section-controls{ display:none; align-items:center; gap:6px; }
+  body.dev-mode .section-controls{ display:flex; }
+  .mini-btn{
+    background: transparent; border:1px solid var(--line); color: var(--muted);
+    width:28px; height:28px; border-radius:2px; display:flex; align-items:center; justify-content:center;
+    transition: all .14s ease;
+  }
+  .mini-btn svg{ width:13px; height:13px; }
+  .mini-btn:hover{ border-color: var(--amber); color: var(--amber-bright); }
+  .mini-btn.danger:hover{ border-color: var(--danger); color: var(--danger); }
+
+  .section-empty{
+    border: 1px dashed var(--line-soft); border-radius: var(--radius);
+    padding: 26px; text-align:center; color: var(--muted-2);
+    font-family:'IBM Plex Mono', monospace; font-size: 12px; letter-spacing:.02em;
+  }
+  .empty{
+    text-align:center; padding: 70px 20px; border: 1px solid var(--line-soft); border-radius:var(--radius);
+    color: var(--muted); background: var(--black-2);
+  }
+  .empty .big{ font-family:'Fraunces', serif; font-size:19px; color:var(--white); margin-bottom:8px; text-transform:uppercase; letter-spacing:.03em; }
+  .empty .small{ font-size:13px; color:var(--muted-2); }
+
+  .gallery{ display:grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: 22px; }
+
+  .card{
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow);
+    transition: transform .38s cubic-bezier(.16,1,.3,1), border-color .3s ease, box-shadow .38s ease;
+    display:flex; flex-direction:column;
+  }
+  .card:hover{
+    transform: translateY(-6px) scale(1.015);
+    border-color: var(--amber);
+    box-shadow: 0 0 0 1px rgba(195,161,94,0.22), 0 26px 60px -18px rgba(195,161,94,0.35), var(--shadow);
+  }
+  .cover-wrap{
+    position:relative; aspect-ratio: 3/4; background: var(--black-2);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; cursor:pointer; border-bottom: 1px solid var(--line);
+  }
+  .cover-wrap img{ width:100%; height:100%; object-fit:cover; display:block; transition: transform .5s cubic-bezier(.16,1,.3,1), filter .5s ease; }
+  .card:hover .cover-wrap img{ transform: scale(1.09); filter: brightness(1.05); }
+  .cover-wrap::after{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background: linear-gradient(180deg, transparent 55%, rgba(195,161,94,0.14) 100%);
+    opacity:0; transition: opacity .4s ease; z-index:2;
+  }
+  .card:hover .cover-wrap::after{ opacity:1; }
+  .cover-fallback{ display:flex; flex-direction:column; align-items:center; gap:10px; color: var(--muted-2); padding: 10px; }
+  .cover-fallback svg{ width:38px; height:38px; opacity:.55; }
+  .cover-fallback span{ font-family:'IBM Plex Mono', monospace; font-size:10px; text-align:center; letter-spacing:.06em; text-transform:uppercase; }
+  .tag{
+    position:absolute; top:10px; right:10px; background: rgba(10,10,12,0.75); color: var(--amber-bright);
+    border: 1px solid var(--amber-deep); backdrop-filter: blur(4px);
+    font-family:'IBM Plex Mono', monospace; font-size:9px; font-weight:600; letter-spacing:.12em;
+    padding: 4px 10px; text-transform:uppercase; border-radius: 20px;
+  }
+  .cover-wrap:hover .open-overlay{ opacity:1; }
+  .open-overlay{
+    position:absolute; inset:0; background: rgba(10,10,12,0.7);
+    display:flex; align-items:center; justify-content:center; opacity:0; transition: opacity .2s ease;
+  }
+  .open-overlay span{
+    font-family:'Fraunces', serif; font-style:italic; font-size:13px; letter-spacing:.03em;
+    color: var(--amber-bright); border:1px solid var(--amber); padding:9px 18px; border-radius:20px;
+  }
+  .card-body{ padding: 16px 18px 18px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .card-title{
+    font-family:'Fraunces', serif; font-size: 15.5px; font-weight:500; color: var(--white);
+    line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .card-meta{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color: var(--muted-2); display:flex; gap:8px; flex-wrap:wrap; }
+  .card-actions{ margin-top:auto; display:flex; gap:8px; padding-top:6px; flex-wrap: wrap; }
+  .icon-btn{
+    background: transparent; border:1px solid var(--line); color: var(--muted);
+    width:32px; height:32px; border-radius:2px; display:flex; align-items:center; justify-content:center;
+    transition: all .14s ease;
+  }
+  .icon-btn svg{ width:15px; height:15px; }
+  .icon-btn:hover{ border-color: var(--amber); color: var(--amber-bright); }
+  .icon-btn.danger:hover{ border-color: var(--danger); color: var(--danger); }
+  .icon-btn.grow{ flex:1; }
+  .section-select{
+    display:none;
+    width:100%; margin-top:2px;
+    background: var(--black-2); border:1px solid var(--line); color: var(--muted);
+    font-family:'IBM Plex Mono', monospace; font-size: 10.5px; padding: 6px 8px; border-radius:2px;
+  }
+  body.dev-mode .section-select{ display:block; }
+  .section-select:focus{ border-color: var(--amber); color:var(--white); }
+
+  /* ---------- VIEWER MODAL ---------- */
+  .modal-backdrop{
+    position: fixed; inset:0; background: rgba(6,6,7,0.88); backdrop-filter: blur(6px);
+    z-index: 100; display:none; align-items:center; justify-content:center; padding: 24px;
+    opacity:0; transition: opacity .3s ease;
+  }
+  .modal-backdrop.open{ display:flex; opacity:1; }
+  .viewer{
+    width:100%; height:100%; max-width: 1100px;
+    background: var(--panel); border:1px solid var(--amber-deep); border-radius: 4px;
+    display:flex; flex-direction:column;
+    box-shadow: 0 0 0 rgba(201,154,46,0), 0 30px 80px -20px rgba(0,0,0,0.85);
+  }
+  .modal-backdrop#viewerBackdrop.open .viewer{
+    animation: viewerReveal .45s cubic-bezier(.16,1,.3,1) forwards;
+  }
+  @keyframes viewerReveal{
+    0%{ opacity:0; transform: scale(.93) translateY(10px); box-shadow: 0 0 0 rgba(201,154,46,0), 0 30px 80px -20px rgba(0,0,0,0.85); }
+    55%{ box-shadow: 0 0 70px -10px rgba(201,154,46,0.5), 0 30px 80px -20px rgba(0,0,0,0.85); }
+    100%{ opacity:1; transform: scale(1) translateY(0); box-shadow: 0 0 45px -18px rgba(201,154,46,0.35), 0 30px 80px -20px rgba(0,0,0,0.85); }
+  }
+  @media (prefers-reduced-motion: reduce){ .modal-backdrop#viewerBackdrop.open .viewer{ animation:none; } }
+  .viewer-head{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding: 14px 18px; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #151517, #121213);
+  }
+  .viewer-head h3{ font-family:'Fraunces', serif; font-size:15px; font-weight:500; margin:0; color:var(--white); }
+  .viewer-head .meta{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color: var(--muted-2); margin-top:2px; }
+  .viewer-close{ background: transparent; border:1px solid var(--line); color:var(--muted); width:32px; height:32px; border-radius:2px; display:flex; align-items:center; justify-content:center; }
+  .viewer-close:hover{ border-color:var(--amber); color:var(--amber-bright); }
+  .viewer-body{ flex:1; background: #050506; }
+  .viewer-body iframe{ width:100%; height:100%; border:none; }
+  .viewer-fallback{ height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color: var(--muted); padding: 30px; text-align:center; }
+
+  /* ---------- GENERIC SMALL MODAL ---------- */
+  .modal-panel{
+    width: 100%; max-width: 380px; background: var(--panel); border:1px solid var(--line);
+    border-radius:4px; padding: 24px; box-shadow: var(--shadow);
+  }
+  .modal-panel h3{ font-family:'Fraunces', serif; font-size:17px; margin:0 0 6px; text-transform:uppercase; letter-spacing:.03em; }
+  .modal-panel p{ color:var(--muted); font-size:13px; line-height:1.5; margin: 0 0 16px; }
+  .modal-panel label{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); display:block; margin-bottom:6px; }
+  .modal-panel input[type="text"]{
+    width:100%; background: var(--black-2); border:1px solid var(--line); color:var(--white);
+    padding:10px 12px; border-radius:2px; font-family:'Inter'; font-size:13px; margin-bottom:16px;
+  }
+  .modal-panel input[type="text"]:focus{ border-color:var(--amber); }
+  .modal-actions{ display:flex; gap:10px; justify-content:flex-end; }
+
+  .toast-wrap{ position:fixed; bottom:22px; right:22px; z-index:200; display:flex; flex-direction:column; gap:10px; }
+  .toast{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; padding: 12px 16px;
+    background: var(--panel); border:1px solid var(--amber); border-left:3px solid var(--amber);
+    color: var(--white); border-radius:2px; box-shadow: var(--shadow);
+    animation: slideIn .25s ease;
+  }
+  .toast.err{ border-color: var(--danger); border-left-color: var(--danger); }
+  @keyframes slideIn{ from{ opacity:0; transform: translateX(16px);} to{opacity:1; transform:translateX(0);} }
+
+  footer{
+    text-align:center; padding: 30px; color: var(--muted-2); font-family:'IBM Plex Mono', monospace;
+    font-size: 10.5px; letter-spacing:.08em; border-top:1px solid var(--line-soft); text-transform:uppercase;
+  }
+
+  @media (max-width: 640px){
+    .nameplate-inner{ padding: 18px 18px; }
+    .header-right{ gap:14px; }
+    .header-stats{ gap:16px; }
+    main{ padding: 26px 16px 60px; }
+    .intake{ padding: 24px 20px; }
+    .gallery{ grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap:14px; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+
+<header class="nameplate">
+  <div class="nameplate-inner">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>Astec Manuais</h1>
+        <div class="eyebrow">Documentação técnica de engenharia</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-stats">
+        <div class="stat"><div class="n" id="statTotal">0</div><div class="l">Manuais</div></div>
+        <div class="stat"><div class="n" id="statSections">0</div><div class="l">Seções</div></div>
+        <div class="stat"><div class="n" id="statSize">0 MB</div><div class="l">Armazenado</div></div>
+      </div>
+      <button class="dev-toggle" id="devToggle"><span class="dot"></span> Modo Desenvolvedor</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="intake" id="intake">
+    <div class="intake-top">
+      <div>
+        <div class="intake-label">Novo documento</div>
+        <h2>Adicionar manual técnico</h2>
+        <p>Arraste um PDF até aqui, selecione um arquivo do computador, ou cole o link direto de um manual. A capa é gerada automaticamente a partir da primeira página — ou defina uma imagem própria depois.</p>
+      </div>
+      <div class="drop-cta">
+        <button class="btn" id="btnPickFile">Selecionar PDF</button>
+        <span class="hint">ou solte o arquivo na área acima</span>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept="application/pdf" multiple hidden>
+
+    <div class="dest-row">
+      <label for="sectionSelect">Seção de destino</label>
+      <select id="sectionSelect"></select>
+    </div>
+
+    <div class="link-row">
+      <input type="text" id="linkInput" placeholder="Colar link do manual (ex: https://dominio.com/manual-x.pdf)">
+      <button class="btn ghost" id="btnAddLink">Adicionar por link</button>
+      <div class="link-status" id="linkStatus"></div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <button class="btn ghost small" id="btnNewSection" style="display:none;">+ Nova seção</button>
+    <input type="text" class="search" id="searchInput" placeholder="Buscar por título…">
+  </div>
+
+  <div id="sectionsWrap"></div>
+</main>
+
+<footer>Astec Manuais · biblioteca local — os arquivos ficam salvos apenas neste navegador</footer>
+
+<div class="modal-backdrop" id="viewerBackdrop">
+  <div class="viewer">
+    <div class="viewer-head">
+      <div><h3 id="viewerTitle">—</h3><div class="meta" id="viewerMeta">—</div></div>
+      <button class="viewer-close" id="viewerClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="viewer-body" id="viewerBody"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="coverBackdrop">
+  <div class="modal-panel">
+    <h3>Definir capa</h3>
+    <p>Envie uma imagem para usar como capa deste manual (substitui a prévia gerada automaticamente).</p>
+    <input type="file" id="coverFileInput" accept="image/*" style="margin-bottom:16px; font-family:'IBM Plex Mono'; font-size:12px; color:var(--muted);">
+    <div class="modal-actions">
+      <button class="btn ghost small" id="coverCancel">Cancelar</button>
+      <button class="btn small" id="coverSave">Salvar capa</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="sectionBackdrop">
+  <div class="modal-panel">
+    <h3 id="sectionModalTitle">Nova seção</h3>
+    <p id="sectionModalHint">Crie um novo local no acervo para agrupar manuais relacionados.</p>
+    <label for="sectionNameInput">Nome da seção</label>
+    <input type="text" id="sectionNameInput" placeholder="Ex: Robótica, Injetoras, Elétrica…">
+    <div class="modal-actions">
+      <button class="btn ghost small" id="sectionCancel">Cancelar</button>
+      <button class="btn small" id="sectionSave">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+(function(){
+  "use strict";
+  if(window.pdfjsLib){
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  }
+
+  const DB_NAME = "manuaisTecnicosDB";
+  const DB_VERSION = 2;
+  const STORE_MANUALS = "manuais";
+  const STORE_SECTIONS = "sections";
+  const STORE_META = "meta";
+  const DEFAULT_SECTION_ID = "default";
+
+  let db = null;
+  let manuals = [];
+  let sections = [];
+  let devMode = false;
+  let coverTargetId = null;
+  let sectionModalMode = 'create';
+  let sectionModalTarget = null;
+
+  function openDB(){
+    return new Promise((resolve, reject)=>{
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e)=>{
+        const _db = e.target.result;
+        if(!_db.objectStoreNames.contains(STORE_MANUALS)){
+          const store = _db.createObjectStore(STORE_MANUALS, {keyPath:"id"});
+          store.createIndex("addedAt","addedAt");
+        }
+        if(!_db.objectStoreNames.contains(STORE_SECTIONS)){
+          _db.createObjectStore(STORE_SECTIONS, {keyPath:"id"});
+        }
+        if(!_db.objectStoreNames.contains(STORE_META)){
+          _db.createObjectStore(STORE_META, {keyPath:"id"});
+        }
+      };
+      req.onsuccess = ()=>{ db = req.result; resolve(db); };
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+  function store(name, mode){ return db.transaction(name, mode).objectStore(name); }
+  function getAll(name){
+    return new Promise((resolve,reject)=>{
+      const req = store(name,"readonly").getAll();
+      req.onsuccess = ()=> resolve(req.result || []);
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+  function put(name, record){
+    return new Promise((resolve,reject)=>{
+      const req = store(name,"readwrite").put(record);
+      req.onsuccess = ()=> resolve();
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+  function del(name, id){
+    return new Promise((resolve,reject)=>{
+      const req = store(name,"readwrite").delete(id);
+      req.onsuccess = ()=> resolve();
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+
+  function uid(prefix){ return (prefix||'m') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
+  function fmtBytes(bytes){
+    if(!bytes) return "0 KB";
+    const kb = bytes/1024;
+    if(kb < 1024) return kb.toFixed(0) + " KB";
+    return (kb/1024).toFixed(1) + " MB";
+  }
+  function fmtDate(ts){ return new Date(ts).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'}); }
+  function niceTitleFromName(name){ return name.replace(/\.pdf$/i,'').replace(/[_-]+/g,' ').trim(); }
+  function niceTitleFromUrl(url){
+    try{
+      const u = new URL(url);
+      const parts = u.pathname.split('/').filter(Boolean);
+      const last = parts[parts.length-1] || u.hostname;
+      return niceTitleFromName(decodeURIComponent(last)) || u.hostname;
+    }catch(e){ return url; }
+  }
+  function escapeHtml(str){ const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+  function toast(msg, isErr){
+    const wrap = document.getElementById('toastWrap');
+    const el = document.createElement('div');
+    el.className = 'toast' + (isErr ? ' err':'');
+    el.textContent = msg;
+    wrap.appendChild(el);
+    setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),300); }, 3200);
+  }
+
+  async function renderCoverFromPdfBlob(blob){
+    try{
+      const buf = await blob.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({scale: 1.2});
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width; canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      await page.render({canvasContext: ctx, viewport}).promise;
+      return await new Promise(res=> canvas.toBlob(b=> res(b), 'image/jpeg', 0.85));
+    }catch(e){ console.warn('Falha ao gerar capa', e); return null; }
+  }
+  async function tryFetchRemotePdf(url){
+    try{
+      const resp = await fetch(url, {mode:'cors'});
+      if(!resp.ok) return null;
+      return await resp.blob();
+    }catch(e){ return null; }
+  }
+  function isPdfLink(url){ return /\.pdf(\?|#|$)/i.test(url); }
+  function coverIconSvg(){
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 16.5h6M9 9.5h3"/></svg>`;
+  }
+
+  // ---------- Sections helpers ----------
+  function sortedSections(){ return [...sections].sort((a,b)=> a.order - b.order); }
+  function sectionById(id){ return sections.find(s=>s.id===id); }
+
+  function populateSectionSelects(){
+    const opts = sortedSections().map(s=> `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+    document.getElementById('sectionSelect').innerHTML = opts;
+  }
+
+  async function ensureDefaultSection(){
+    if(!sections.find(s=>s.id===DEFAULT_SECTION_ID)){
+      const rec = {id: DEFAULT_SECTION_ID, name: 'Sem Seção', order: 0};
+      await put(STORE_SECTIONS, rec);
+      sections.push(rec);
+    }
+  }
+
+  async function createSection(name){
+    const maxOrder = sections.reduce((m,s)=> Math.max(m,s.order), -1);
+    const rec = {id: uid('sec'), name: name.trim(), order: maxOrder+1};
+    await put(STORE_SECTIONS, rec);
+    sections.push(rec);
+    return rec;
+  }
+  async function renameSection(id, name){
+    const s = sectionById(id);
+    if(!s) return;
+    s.name = name.trim();
+    await put(STORE_SECTIONS, s);
+  }
+  async function deleteSection(id){
+    if(id === DEFAULT_SECTION_ID){ toast('A seção padrão não pode ser apagada.', true); return; }
+    const s = sectionById(id);
+    if(!s) return;
+    if(!confirm('Apagar a seção "' + s.name + '"? Os manuais dela serão movidos para "Sem Seção".')) return;
+    const affected = manuals.filter(m=>m.sectionId === id);
+    for(const m of affected){ m.sectionId = DEFAULT_SECTION_ID; await put(STORE_MANUALS, m); }
+    await del(STORE_SECTIONS, id);
+    sections = sections.filter(x=>x.id!==id);
+    renderAll();
+    toast('Seção apagada. Manuais movidos para "Sem Seção".');
+  }
+  async function moveSection(id, dir){
+    const list = sortedSections();
+    const idx = list.findIndex(s=>s.id===id);
+    const swapIdx = idx + dir;
+    if(swapIdx < 0 || swapIdx >= list.length) return;
+    const a = list[idx], b = list[swapIdx];
+    const tmp = a.order; a.order = b.order; b.order = tmp;
+    await put(STORE_SECTIONS, a); await put(STORE_SECTIONS, b);
+    renderAll();
+  }
+
+  // ---------- Card / section render ----------
+  function cardTemplate(m){
+    const coverImg = m.coverBlob ? URL.createObjectURL(m.coverBlob) : null;
+    const tagLabel = m.sourceType === 'link' ? 'LINK' : 'PDF';
+    const sectionOpts = sortedSections().map(s=> `<option value="${s.id}" ${s.id===m.sectionId?'selected':''}>${escapeHtml(s.name)}</option>`).join('');
+    return `
+    <article class="card" data-id="${m.id}">
+      <div class="cover-wrap" data-action="open">
+        ${coverImg ? `<img src="${coverImg}" alt="Capa de ${escapeHtml(m.title)}">` : `<div class="cover-fallback">${coverIconSvg()}<span>Sem prévia</span></div>`}
+        <span class="tag">${tagLabel}</span>
+        <div class="open-overlay"><span>Abrir manual</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-title" title="${escapeHtml(m.title)}">${escapeHtml(m.title)}</div>
+        <div class="card-meta">
+          <b>${fmtDate(m.addedAt)}</b>
+          ${m.fileSize ? `<span>· ${fmtBytes(m.fileSize)}</span>` : ''}
+        </div>
+        <div class="card-actions">
+          <button class="icon-btn grow" data-action="open" title="Abrir">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="icon-btn" data-action="cover" title="Trocar capa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="1.5"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 16l-5-5-4 4-2-2-5 5"/></svg>
+          </button>
+          <button class="icon-btn danger" data-action="delete" title="Apagar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          </button>
+          <select class="section-select" data-action="reassign" title="Mover para outra seção">${sectionOpts}</select>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  function sectionBlockTemplate(sec, list){
+    const idx0 = sortedSections().findIndex(s=>s.id===sec.id);
+    const isFirst = idx0 === 0;
+    const isLast = idx0 === sortedSections().length - 1;
+    const canDelete = sec.id !== DEFAULT_SECTION_ID;
+    const body = list.length
+      ? `<div class="gallery">${list.map(cardTemplate).join('')}</div>`
+      : `<div class="section-empty">Nenhum manual nesta seção ainda. Anexe um PDF acima e selecione "${escapeHtml(sec.name)}" como destino.</div>`;
+    return `
+    <div class="section-block" data-section-id="${sec.id}">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-name">${escapeHtml(sec.name)}</div>
+          <div class="section-count">${list.length} manual${list.length===1?'':'is'}</div>
+        </div>
+        <div class="section-controls">
+          <button class="mini-btn" data-sec-action="move-up" ${isFirst?'disabled':''} title="Mover seção para cima">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
+          <button class="mini-btn" data-sec-action="move-down" ${isLast?'disabled':''} title="Mover seção para baixo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </button>
+          <button class="mini-btn" data-sec-action="rename" title="Renomear seção">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+          </button>
+          ${canDelete ? `<button class="mini-btn danger" data-sec-action="delete" title="Apagar seção">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
+          </button>` : ''}
+        </div>
+      </div>
+      ${body}
+    </div>`;
+  }
+
+  function renderAll(){
+    const wrap = document.getElementById('sectionsWrap');
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+
+    if(manuals.length === 0 && !q){
+      wrap.innerHTML = `<div class="empty">
+        <div class="big">Nenhum manual anexado ainda</div>
+        <div class="small">Use a área acima para anexar o primeiro PDF e organizá-lo em uma seção.</div>
+      </div>`;
+    } else {
+      const list = sortedSections();
+      let html = '';
+      let anyMatch = false;
+      for(const sec of list){
+        let items = manuals.filter(m => (m.sectionId||DEFAULT_SECTION_ID) === sec.id);
+        if(q) items = items.filter(m => m.title.toLowerCase().includes(q));
+        items = items.sort((a,b)=> b.addedAt - a.addedAt);
+        if(q && items.length === 0 && !devMode) continue; // hide empty sections while searching (unless dev mode)
+        anyMatch = anyMatch || items.length > 0;
+        html += sectionBlockTemplate(sec, items);
+      }
+      if(q && !anyMatch){
+        wrap.innerHTML = `<div class="empty"><div class="big">Nada encontrado</div><div class="small">Tente outro termo de busca.</div></div>`;
+      } else {
+        wrap.innerHTML = html;
+      }
+    }
+    document.getElementById('btnNewSection').style.display = devMode ? 'inline-block' : 'none';
+    populateSectionSelects();
+    updateStats();
+  }
+
+  function updateStats(){
+    document.getElementById('statTotal').textContent = manuals.length;
+    document.getElementById('statSections').textContent = sections.length;
+    const totalBytes = manuals.reduce((s,m)=> s + (m.fileSize||0) + (m.coverBlob ? m.coverBlob.size : 0), 0);
+    document.getElementById('statSize').textContent = fmtBytes(totalBytes);
+  }
+
+  // ---------- Add manual ----------
+  async function addPdfFile(file){
+    const sectionId = document.getElementById('sectionSelect').value || DEFAULT_SECTION_ID;
+    toast('Processando "' + file.name + '"…');
+    const cover = await renderCoverFromPdfBlob(file);
+    const record = {
+      id: uid('m'), title: niceTitleFromName(file.name), sourceType: 'file',
+      fileBlob: file, fileSize: file.size, coverBlob: cover, link: null,
+      sectionId, addedAt: Date.now()
+    };
+    await put(STORE_MANUALS, record);
+    manuals.push(record);
+    renderAll();
+    toast('Manual "' + record.title + '" anexado.');
+  }
+
+  async function addLinkManual(url){
+    const statusEl = document.getElementById('linkStatus');
+    if(!/^https?:\/\//i.test(url)){
+      statusEl.textContent = 'Informe um link começando com http:// ou https://';
+      statusEl.className = 'link-status err';
+      return;
+    }
+    const looksPdf = isPdfLink(url);
+    statusEl.className = 'link-status';
+    statusEl.textContent = looksPdf ? 'Link reconhecido como PDF. Tentando obter prévia…' : 'Adicionando link (extensão não identificada como .pdf)…';
+
+    const sectionId = document.getElementById('sectionSelect').value || DEFAULT_SECTION_ID;
+    let cover = null, fileSize = null, fileBlob = null;
+    const blob = await tryFetchRemotePdf(url);
+    if(blob){ fileBlob = blob; fileSize = blob.size; cover = await renderCoverFromPdfBlob(blob); }
+
+    const record = {
+      id: uid('m'), title: niceTitleFromUrl(url), sourceType: 'link', link: url,
+      fileBlob, fileSize, coverBlob: cover, sectionId, addedAt: Date.now()
+    };
+    await put(STORE_MANUALS, record);
+    manuals.push(record);
+    renderAll();
+    document.getElementById('linkInput').value = '';
+    if(blob){ statusEl.className = 'link-status ok'; statusEl.textContent = 'Manual salvo com prévia gerada localmente.'; }
+    else { statusEl.className = 'link-status warn'; statusEl.textContent = 'Link salvo. O navegador não permitiu baixar o arquivo para gerar a capa — o manual abrirá direto pelo link.'; }
+    toast('Manual "' + record.title + '" adicionado por link.');
+  }
+
+  // ---------- Viewer ----------
+  function openViewer(m){
+    const backdrop = document.getElementById('viewerBackdrop');
+    const body = document.getElementById('viewerBody');
+    document.getElementById('viewerTitle').textContent = m.title;
+    document.getElementById('viewerMeta').textContent =
+      (m.sourceType === 'link' ? 'Origem: link' : 'Origem: arquivo local') +
+      (m.fileSize ? ' · ' + fmtBytes(m.fileSize) : '') + ' · ' + fmtDate(m.addedAt);
+    body.innerHTML = '';
+    if(m.fileBlob){
+      const url = URL.createObjectURL(m.fileBlob);
+      body.innerHTML = `<iframe src="${url}#toolbar=1"></iframe>`;
+    } else if(m.link){
+      body.innerHTML = `<iframe src="${m.link}"></iframe>`;
+    } else {
+      body.innerHTML = `<div class="viewer-fallback">Não foi possível carregar este manual.</div>`;
+    }
+    backdrop.classList.add('open');
+  }
+  function closeViewer(){
+    document.getElementById('viewerBackdrop').classList.remove('open');
+    document.getElementById('viewerBody').innerHTML = '';
+  }
+
+  // ---------- Cover modal ----------
+  function openCoverModal(id){
+    coverTargetId = id;
+    document.getElementById('coverFileInput').value = '';
+    document.getElementById('coverBackdrop').classList.add('open');
+  }
+  function closeCoverModal(){ coverTargetId = null; document.getElementById('coverBackdrop').classList.remove('open'); }
+  async function saveCover(){
+    const input = document.getElementById('coverFileInput');
+    const file = input.files && input.files[0];
+    if(!file || !coverTargetId){ closeCoverModal(); return; }
+    const m = manuals.find(x=>x.id === coverTargetId);
+    if(!m){ closeCoverModal(); return; }
+    m.coverBlob = file;
+    await put(STORE_MANUALS, m);
+    renderAll();
+    closeCoverModal();
+    toast('Capa atualizada para "' + m.title + '".');
+  }
+
+  // ---------- Section modal ----------
+  function openSectionModal(mode, targetId){
+    sectionModalMode = mode;
+    sectionModalTarget = targetId || null;
+    const title = document.getElementById('sectionModalTitle');
+    const hint = document.getElementById('sectionModalHint');
+    const input = document.getElementById('sectionNameInput');
+    if(mode === 'rename'){
+      const s = sectionById(targetId);
+      title.textContent = 'Renomear seção';
+      hint.textContent = 'Escolha um novo nome para esta seção do acervo.';
+      input.value = s ? s.name : '';
+    } else {
+      title.textContent = 'Nova seção';
+      hint.textContent = 'Crie um novo local no acervo para agrupar manuais relacionados.';
+      input.value = '';
+    }
+    document.getElementById('sectionBackdrop').classList.add('open');
+    input.focus();
+  }
+  function closeSectionModal(){ document.getElementById('sectionBackdrop').classList.remove('open'); }
+  async function saveSectionModal(){
+    const name = document.getElementById('sectionNameInput').value.trim();
+    if(!name){ toast('Digite um nome para a seção.', true); return; }
+    if(sectionModalMode === 'rename' && sectionModalTarget){
+      await renameSection(sectionModalTarget, name);
+      toast('Seção renomeada.');
+    } else {
+      await createSection(name);
+      toast('Seção "' + name + '" criada.');
+    }
+    closeSectionModal();
+    renderAll();
+  }
+
+  // ---------- Delete manual ----------
+  async function deleteManual(id){
+    const m = manuals.find(x=>x.id===id);
+    if(!m) return;
+    if(!confirm('Apagar o manual "' + m.title + '"? Essa ação não pode ser desfeita.')) return;
+    await del(STORE_MANUALS, id);
+    manuals = manuals.filter(x=>x.id!==id);
+    renderAll();
+    toast('Manual apagado.');
+  }
+
+  async function reassignManual(id, sectionId){
+    const m = manuals.find(x=>x.id===id);
+    if(!m) return;
+    m.sectionId = sectionId;
+    await put(STORE_MANUALS, m);
+    renderAll();
+    toast('Manual movido para "' + (sectionById(sectionId)||{}).name + '".');
+  }
+
+  // ---------- Dev mode ----------
+  async function setDevMode(on){
+    devMode = on;
+    document.body.classList.toggle('dev-mode', devMode);
+    await put(STORE_META, {id:'app', devMode});
+    renderAll();
+  }
+
+  // ---------- Events ----------
+  function initEvents(){
+    const intake = document.getElementById('intake');
+    const fileInput = document.getElementById('fileInput');
+
+    document.getElementById('btnPickFile').addEventListener('click', ()=> fileInput.click());
+    fileInput.addEventListener('change', async (e)=>{
+      const files = Array.from(e.target.files || []);
+      for(const f of files){
+        if(f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) await addPdfFile(f);
+        else toast('Ignorado (não é PDF): ' + f.name, true);
+      }
+      fileInput.value = '';
+    });
+
+    ['dragenter','dragover'].forEach(evt=> intake.addEventListener(evt, (e)=>{ e.preventDefault(); intake.classList.add('drag'); }));
+    ['dragleave'].forEach(evt=> intake.addEventListener(evt, (e)=>{ e.preventDefault(); if(e.target === intake) intake.classList.remove('drag'); }));
+    intake.addEventListener('drop', async (e)=>{
+      e.preventDefault();
+      intake.classList.remove('drag');
+      const dt = e.dataTransfer;
+      if(!dt) return;
+      const urlText = dt.getData('text/uri-list') || dt.getData('text/plain');
+      const files = Array.from(dt.files || []);
+      if(files.length){
+        for(const f of files){
+          if(f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) await addPdfFile(f);
+          else toast('Ignorado (não é PDF): ' + f.name, true);
+        }
+      } else if(urlText && /^https?:\/\//i.test(urlText)){
+        await addLinkManual(urlText.trim());
+      }
+    });
+
+    document.getElementById('btnAddLink').addEventListener('click', ()=>{
+      const val = document.getElementById('linkInput').value.trim();
+      if(val) addLinkManual(val);
+    });
+    document.getElementById('linkInput').addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){ const val = e.target.value.trim(); if(val) addLinkManual(val); }
+    });
+
+    document.getElementById('searchInput').addEventListener('input', renderAll);
+    document.getElementById('devToggle').addEventListener('click', ()=> setDevMode(!devMode));
+    document.getElementById('btnNewSection').addEventListener('click', ()=> openSectionModal('create'));
+
+    document.getElementById('sectionsWrap').addEventListener('click', (e)=>{
+      const secBtn = e.target.closest('[data-sec-action]');
+      if(secBtn){
+        const block = secBtn.closest('.section-block');
+        const secId = block.getAttribute('data-section-id');
+        const action = secBtn.getAttribute('data-sec-action');
+        if(action === 'rename') openSectionModal('rename', secId);
+        else if(action === 'delete') deleteSection(secId);
+        else if(action === 'move-up') moveSection(secId, -1);
+        else if(action === 'move-down') moveSection(secId, 1);
+        return;
+      }
+      const actionEl = e.target.closest('[data-action]');
+      const card = e.target.closest('.card');
+      if(!card) return;
+      const id = card.getAttribute('data-id');
+      const m = manuals.find(x=>x.id===id);
+      if(!m) return;
+      const action = actionEl ? actionEl.getAttribute('data-action') : 'open';
+      if(action === 'open') openViewer(m);
+      else if(action === 'cover') openCoverModal(id);
+      else if(action === 'delete') deleteManual(id);
+    });
+    document.getElementById('sectionsWrap').addEventListener('change', (e)=>{
+      const sel = e.target.closest('[data-action="reassign"]');
+      if(!sel) return;
+      const card = sel.closest('.card');
+      const id = card.getAttribute('data-id');
+      reassignManual(id, sel.value);
+    });
+
+    document.getElementById('viewerClose').addEventListener('click', closeViewer);
+    document.getElementById('viewerBackdrop').addEventListener('click', (e)=>{ if(e.target.id === 'viewerBackdrop') closeViewer(); });
+
+    document.getElementById('coverCancel').addEventListener('click', closeCoverModal);
+    document.getElementById('coverSave').addEventListener('click', saveCover);
+    document.getElementById('coverBackdrop').addEventListener('click', (e)=>{ if(e.target.id === 'coverBackdrop') closeCoverModal(); });
+
+    document.getElementById('sectionCancel').addEventListener('click', closeSectionModal);
+    document.getElementById('sectionSave').addEventListener('click', saveSectionModal);
+    document.getElementById('sectionBackdrop').addEventListener('click', (e)=>{ if(e.target.id === 'sectionBackdrop') closeSectionModal(); });
+    document.getElementById('sectionNameInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter') saveSectionModal(); });
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){ closeViewer(); closeCoverModal(); closeSectionModal(); }
+    });
+  }
+
+  // ---------- Init ----------
+  (async function init(){
+    try{
+      await openDB();
+      sections = await getAll(STORE_SECTIONS);
+      await ensureDefaultSection();
+      manuals = await getAll(STORE_MANUALS);
+      let migrated = false;
+      for(const m of manuals){
+        if(!m.sectionId){ m.sectionId = DEFAULT_SECTION_ID; migrated = true; await put(STORE_MANUALS, m); }
+      }
+      const metaAll = await getAll(STORE_META);
+      const metaApp = metaAll.find(x=>x.id==='app');
+      devMode = metaApp ? !!metaApp.devMode : false;
+      document.body.classList.toggle('dev-mode', devMode);
+    }catch(e){
+      console.error(e);
+      toast('Erro ao abrir o banco de dados local.', true);
+    }
+    initEvents();
+    renderAll();
+  })();
+})();
+</script>
+</body>
+</html>
